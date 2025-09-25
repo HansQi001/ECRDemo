@@ -3,7 +3,7 @@ name: CI/CD to AWS App Runner
 on:
   push:
     branches:
-      - main   # or your deployment branch
+      - master   # or your deployment branch
 
 jobs:
   deploy:
@@ -26,6 +26,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build, tag, and push image to ECR
+        working-directory: ./ECRDemo.MiniAPI
         run: |
           IMAGE_TAG=latest
           ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
@@ -36,13 +37,4 @@ jobs:
 
       - name: Deploy to App Runner
         run: |
-          aws apprunner update-service --service-arn arn:aws:apprunner:ap-southeast-2:361027010825:service/mini-api-demo/f8987ec1ca1d402a87eab5af338846a2 --source-configuration '{
-              "ImageRepository": {
-                "ImageIdentifier": "'${{ steps.login-ecr.outputs.registry }}/ecr-demo:latest'",
-                "ImageRepositoryType": "ECR",
-                "ImageConfiguration": { "Port": "8080" }
-              },
-              "AuthenticationConfiguration": {
-                "AccessRoleArn": "arn:aws:iam::361027010825:role/AppRunnerECRAccessRole"
-              }
-            }'
+          aws apprunner start-deployment --service-arn arn:aws:apprunner:ap-southeast-2:361027010825:service/mini-api-demo/f8987ec1ca1d402a87eab5af338846a2
