@@ -115,7 +115,8 @@ Your image is now fully ready for cloud deployment 🚀
 
 When modifying the code and wanting to deploy again:
 - Build the Docker Image again  
-- Tag the Image for ECR  
+- Tag the Image for ECR
+- Authenticate Docker to ECR
 - Push the Image to ECR  
 - Trigger App Runner to redeploy  
 
