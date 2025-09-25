@@ -1,3 +1,4 @@
+using Amazon.DynamoDBv2;
 
 namespace ECRDemo.MiniAPI
 {
@@ -14,14 +15,19 @@ namespace ECRDemo.MiniAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Load AWS options from appsettings.json or environment veriables
+            builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+            // Register DynamoDB client
+            builder.Services.AddAWSService<IAmazonDynamoDB>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
+            //if (app.Environment.IsDevelopment())
+            //{
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
+            //}
 
             app.UseHttpsRedirection();
 

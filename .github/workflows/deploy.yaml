@@ -1,0 +1,48 @@
+name: CI/CD to AWS App Runner
+
+on:
+  push:
+    branches:
+      - main   # or your deployment branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to ECR
+        run: |
+          IMAGE_TAG=latest
+          ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY=ecr-demo
+          docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
+          docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Deploy to App Runner
+        run: |
+          aws apprunner update-service --service-arn arn:aws:apprunner:ap-southeast-2:361027010825:service/mini-api-demo/f8987ec1ca1d402a87eab5af338846a2 --source-configuration '{
+              "ImageRepository": {
+                "ImageIdentifier": "'${{ steps.login-ecr.outputs.registry }}/ecr-demo:latest'",
+                "ImageRepositoryType": "ECR",
+                "ImageConfiguration": { "Port": "8080" }
+              },
+              "AuthenticationConfiguration": {
+                "AccessRoleArn": "arn:aws:iam::361027010825:role/AppRunnerECRAccessRole"
+              }
+            }'
