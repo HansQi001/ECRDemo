@@ -1,0 +1,6 @@
+@ECRDemo.MiniAPI_HostAddress = http://localhost:5023
+
+GET {{ECRDemo.MiniAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
