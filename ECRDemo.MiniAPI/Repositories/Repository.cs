@@ -1,8 +1,6 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
-using ECRDemo.MiniAPI.Models;
-using System.Xml.Linq;
 
 namespace ECRDemo.MiniAPI.Repositories
 {

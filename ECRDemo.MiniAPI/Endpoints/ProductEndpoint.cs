@@ -1,7 +1,6 @@
 ﻿using Amazon.DynamoDBv2.Model;
 using ECRDemo.MiniAPI.Models;
 using ECRDemo.MiniAPI.Repositories;
-using System.Threading;
 
 namespace ECRDemo.MiniAPI.Endpoints
 {
