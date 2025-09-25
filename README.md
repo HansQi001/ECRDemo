@@ -1,5 +1,7 @@
 # AWS Deployment Guide for Mini API
 
+***Swagger UI***: https://f4r2keegrw.ap-southeast-2.awsapprunner.com/swagger
+
 This project demonstrates how to build, push, and deploy a Dockerized application using **Amazon ECR (Elastic Container Registry)**, with options to run on **ECS, EKS, or App Runner**.
 
 ---
